@@ -12,6 +12,7 @@
     'summary': 'Install all addons required for testing.',
     'depends': [
         'github_pull_request',
+        'github_pull_request_project',
     ],
     'installable': True,
 }

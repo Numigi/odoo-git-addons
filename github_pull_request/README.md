@@ -1,8 +1,7 @@
-# Project Chatter
+Github Pull Request
+===================
 
-This module adds the chatter to the project form view.
-
-![Project Form](static/description/project_chatter.png?raw=true)
+This modules defines what is a GitHub pull request.
 
 
 Contributors

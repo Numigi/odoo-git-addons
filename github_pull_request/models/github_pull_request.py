@@ -7,6 +7,7 @@ regex_github_source = re.compile(
     r'https:\/\/(?P<host>[\w\.]+)/(?P<organization>\w+)/(?P<repository>[\w\-_]+)/pull/(?P<pull_request_number>\d+)'
 )
 
+
 class GithubPullRequest(models.Model):
     _name = "github.pull_request"
     _description = "Github Pull Request"
