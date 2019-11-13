@@ -65,7 +65,9 @@ class TestPullRequest(common.SavepointCase):
     )
     @unpack
     def test_whenPrIsUpdatedFromURL_thenFieldsAreUpdated(self, url, expected):
-        pr = self.github_pull_request_pool.create({'source': "https://github.com/Numigi/odoo-public/pull/666"})
+        pr = self.github_pull_request_pool.create(
+            {'source': "https://github.com/Numigi/odoo-public/pull/666"}
+        )
         pr.source = url
         assert pr.organization == expected['organization']
         assert pr.host == expected['host']

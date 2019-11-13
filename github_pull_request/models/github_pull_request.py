@@ -4,7 +4,11 @@ import re
 from odoo import fields, models, api
 
 regex_github_source = re.compile(
-    r'https:\/\/(?P<host>[\w\.]+)/(?P<organization>\w+)/(?P<repository>[\w\-_]+)/pull/(?P<pull_request_number>\d+)'
+    r'https:\/\/(?P<host>[\w\.]+)/'
+    r'(?P<organization>\w+)/'
+    r'(?P<repository>[\w\-_]+)/'
+    r'pull/'
+    r'(?P<pull_request_number>\d+)'
 )
 
 

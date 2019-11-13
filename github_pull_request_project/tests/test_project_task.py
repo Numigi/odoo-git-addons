@@ -3,10 +3,8 @@
 
 
 from odoo.tests import common
-from ddt import ddt, data, unpack
 
 
-@ddt
 class TestProjectTask(common.SavepointCase):
 
     @classmethod
@@ -49,7 +47,12 @@ class TestProjectTask(common.SavepointCase):
         task = self.env["project.task"].create({
             "name": "ttask",
             "pull_request_ids": [(
-                6, False, (self.pull_request_open.id, self.pull_request_closed.id, self.pull_request_merged.id)
+                6, False,
+                (
+                    self.pull_request_open.id,
+                    self.pull_request_closed.id,
+                    self.pull_request_merged.id
+                )
             )]
         })
         assert not task.overall_pull_request_state

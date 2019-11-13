@@ -5,7 +5,13 @@ from odoo import fields, models, api
 
 class GithubPullRequestTask(models.Model):
     _inherit = "github.pull_request"
-    task_ids = fields.Many2many('project.task', 'pull_request_task_ref', 'pull_request_id', 'task_id', string='Tasks')
+    task_ids = fields.Many2many(
+        'project.task',
+        'pull_request_task_ref',
+        'pull_request_id',
+        'task_id',
+        string='Tasks'
+    )
 
 
 def evaluate_pull_request_states(task):
@@ -32,7 +38,9 @@ class ProjectTaskPullRequest(models.Model):
         for record in self:
             record.overall_pull_request_state = evaluate_pull_request_states(record)
 
-    overall_pull_request_state = fields.Boolean(readonly=True, compute="_check_all_pull_request_state")
+    overall_pull_request_state = fields.Boolean(
+        readonly=True, compute="_check_all_pull_request_state"
+    )
 
     @api.onchange("pull_request_ids")
     def _all_pull_request_ready_on_change(self):
