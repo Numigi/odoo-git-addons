@@ -11,6 +11,7 @@ class GithubPullRequestTask(models.Model):
 def evaluate_pull_request_states(task):
     return not task.pull_request_ids.filtered(lambda pr: pr.state == "open")
 
+
 class ProjectTaskPullRequest(models.Model):
     _inherit = "project.task"
     pull_request_ids = fields.Many2many(
@@ -21,11 +22,17 @@ class ProjectTaskPullRequest(models.Model):
         string='Pull Requests'
     )
 
+    def _compute_pull_request_qty(self):
+        for record in self:
+            record.pull_request_qty = len(record.pull_request_ids)
+
+    pull_request_qty = fields.Integer(compute="_compute_pull_request_qty")
+
     def _check_all_pull_request_state(self):
         for record in self:
-            record.all_pull_request_ready = evaluate_pull_request_states(record)
+            record.overall_pull_request_state = evaluate_pull_request_states(record)
 
-    all_pull_request_ready = fields.Boolean(readonly=True, compute="_check_all_pull_request_state")
+    overall_pull_request_state = fields.Boolean(readonly=True, compute="_check_all_pull_request_state")
 
     @api.onchange("pull_request_ids")
     def _all_pull_request_ready_on_change(self):

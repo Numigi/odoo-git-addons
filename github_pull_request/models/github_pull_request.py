@@ -14,7 +14,8 @@ class GithubPullRequest(models.Model):
 
     source = fields.Char(required=True)
     state = fields.Selection(
-        [('open', 'Open'), ('merged', 'Merged'), ('closed', 'Closed')]
+        [('open', 'Open'), ('merged', 'Merged'), ('closed', 'Closed')],
+        default='open',
     )
     developer_id = fields.Many2one('res.partner', 'Developer', ondelete='restrict', index=True)
     host = fields.Char(readonly=True)

@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <record id="github_pull_request_form_task_ids" model="ir.ui.view">
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <data>
+                <sheet position="inside">
+                    <group>
+                        <field name="task_ids"/>
+                    </group>
+                </sheet>
+            </data>
+        </field>
+        <field name="inherit_id" ref="github_pull_request.github_pull_request_form"/>
+        <field name="model">github.pull_request</field>
+        <field name="name">Github Pull Request: task ids</field>
+        <field name="type">form</field>
+    </record>
+
+    <record id="github_pull_request_search_task_ids" model="ir.ui.view">
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <field name="task_ids"/>
+            </search>
+        </field>
+        <field name="inherit_id" ref="github_pull_request.github_pull_request_search"/>
+        <field name="model">github.pull_request</field>
+        <field name="name">Github Pull Request: task ids</field>
+        <field name="priority">16</field>
+        <field name="type">search</field>
+    </record>
+
+    <record id="project_task_form_pull_requests" model="ir.ui.view">
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='oe_button_box']" position="inside">
+                <button type="action" class="oe_stat_button" icon="fa-code"
+                        name="%(pull_requests_action_window_context)d">
+                    <field name="pull_request_qty" string="Pull Requests" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="overall_pull_request_state" widget="toggle_button"/>
+            </xpath>
+            <notebook position="inside">
+                <page name="pull_requests" string="Pull Requests">
+                    <field name="pull_request_ids"/>
+                </page>
+            </notebook>
+        </field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="model">project.task</field>
+        <field name="name">Project Task: pull request fields</field>
+        <field name="priority">99</field>
+        <field name="type">form</field>
+    </record>
+
+    <record id="project_task_tree_overall_pull_request_state" model="ir.ui.view">
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='stage_id']" position="after">
+                    <field name="overall_pull_request_state" widget="toggle_button"/>
+                </xpath>
+            </data>
+        </field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="model">project.task</field>
+        <field name="name">Project Task: add overall_pull_request_state</field>
+        <field name="type">tree</field>
+    </record>
+
+</odoo>

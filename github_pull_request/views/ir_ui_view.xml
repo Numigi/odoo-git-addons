@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+  <record id="github_pull_request_tree" model="ir.ui.view">
+    <field name="active" eval="True"/>
+    <field name="arch" type="xml">
+      <tree string="Github Pull Request" delete="false">
+        <field name="source"/>
+        <field name="state"/>
+      </tree>
+    </field>
+    <field name="model">github.pull_request</field>
+    <field name="name">Default tree view for github.pull_request</field>
+    <field name="type">tree</field>
+  </record>
+
+  <record id="github_pull_request_form" model="ir.ui.view">
+    <field name="active" eval="True"/>
+    <field name="arch" type="xml">
+      <form delete="false">
+        <sheet string="Github Pull Request">
+          <h1>
+            <field name="source" modifiers="{'required': true}"/>
+          </h1>
+          <group>
+            <group>
+              <field name="host" modifiers="{'readonly': true}"/>
+              <field name="organization" modifiers="{'readonly': true}"/>
+              <field name="repository" modifiers="{'readonly': true}"/>
+              <field name="pull_request_number" readonly="1"/>
+            </group>
+            <group>
+              <field name="state"/>
+              <field name="developer_id" modifiers="{'required': true}"/>
+            </group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+    <field name="model">github.pull_request</field>
+    <field name="name">Default form view for github.pull_request</field>
+    <field name="priority">16</field>
+    <field name="type">form</field>
+  </record>
+
+  <record id="github_pull_request_search" model="ir.ui.view">
+    <field name="active" eval="True"/>
+    <field name="arch" type="xml">
+      <search string="Github Pull Request">
+        <field name="organization"/>
+        <field name="repository"/>
+        <field name="developer_id"/>
+        <field name="state"/>
+        <group name="studio_group_by">
+          <filter context="{'group_by': 'state'}" name="state" string="State"/>
+          <filter context="{'group_by': 'developer_id'}" name="developer" string="Developer"/>
+          <filter context="{'group_by': 'repository'}" name="repository" string="Repository"/>
+        </group>
+        <filter domain="[['state','=','open']]" name="open" string="Open"/>
+        <filter domain="[['state','!=','open']]" name="finished" string="Finished"/>
+      </search>
+    </field>
+    <field name="model">github.pull_request</field>
+    <field name="name">Default search view for github.pull_request</field>
+    <field name="priority">16</field>
+    <field name="type">search</field>
+  </record>
+
+</odoo>

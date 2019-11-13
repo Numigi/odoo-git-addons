@@ -13,6 +13,9 @@
     'depends': [],
     'data': [
         'security/ir.model.access.csv',
+        'views/ir_ui_view.xml',
+        'views/ir_actions_act_window.xml',
+        'views/ir_ui_menu.xml',
     ],
     'installable': True,
 }
