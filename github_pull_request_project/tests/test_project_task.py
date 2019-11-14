@@ -24,23 +24,29 @@ class TestProjectTask(common.SavepointCase):
         })
 
     # Simple cases
+    def test_whenNoPR_thenTaskReady(self):
+        task = self.env["project.task"].create({
+            "name": "ttask", "pull_request_ids": [(5, False, False)]
+        })
+        assert task.no_pull_request_open
+
     def test_whenPrAreMerged_thenTaskReady(self):
         task = self.env["project.task"].create({
             "name": "ttask", "pull_request_ids": [(6, False, (self.pull_request_merged.id,))]
         })
-        assert task.overall_pull_request_state
+        assert task.no_pull_request_open
 
     def test_whenPrAreClosed_thenTaskReady(self):
         task = self.env["project.task"].create({
             "name": "ttask", "pull_request_ids": [(6, False, (self.pull_request_closed.id,))]
         })
-        assert task.overall_pull_request_state
+        assert task.no_pull_request_open
 
     def test_whenPrAreOpen_thenTaskNotReady(self):
         task = self.env["project.task"].create({
             "name": "ttask", "pull_request_ids": [(6, False, (self.pull_request_open.id,))]
         })
-        assert not task.overall_pull_request_state
+        assert not task.no_pull_request_open
 
     # Mixing cases
     def test_whenAllStates_thenTaskNotReady(self):
@@ -55,7 +61,7 @@ class TestProjectTask(common.SavepointCase):
                 )
             )]
         })
-        assert not task.overall_pull_request_state
+        assert not task.no_pull_request_open
 
     def test_whenClosedAndMerged_thenTaskReady(self):
         task = self.env["project.task"].create({
@@ -64,7 +70,7 @@ class TestProjectTask(common.SavepointCase):
                 6, False, (self.pull_request_closed.id, self.pull_request_merged.id)
             )]
         })
-        assert task.overall_pull_request_state
+        assert task.no_pull_request_open
 
     def test_whenMergedAndOpen_thenTaskNotReady(self):
         task = self.env["project.task"].create({
@@ -73,7 +79,7 @@ class TestProjectTask(common.SavepointCase):
                 6, False, (self.pull_request_merged.id, self.pull_request_open.id)
             )]
         })
-        assert not task.overall_pull_request_state
+        assert not task.no_pull_request_open
 
     def test_whenClosedAndOpen_thenTaskNotReady(self):
         task = self.env["project.task"].create({
@@ -82,4 +88,4 @@ class TestProjectTask(common.SavepointCase):
                 6, False, (self.pull_request_closed.id, self.pull_request_open.id)
             )]
         })
-        assert not task.overall_pull_request_state
+        assert not task.no_pull_request_open

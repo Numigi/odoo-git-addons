@@ -33,18 +33,17 @@ class GithubPullRequest(models.Model):
 
     @api.model
     def create(self, vals):
-        source = vals['source']
-        res = re.match(regex_github_source, source)
-        if res:
-            vals.update(res.groupdict())
-
-        return super().create(vals)
+        updated_vals = update_according_to_source(vals['source'], vals)
+        return super().create(updated_vals)
 
     @api.multi
     def write(self, vals):
-        source = vals.get('source', '')
-        res = re.match(regex_github_source, source)
-        if res:
-            vals.update(res.groupdict())
+        updated_vals = update_according_to_source(vals.get('source', ''), vals)
+        super().write(updated_vals)
 
-        super().write(vals)
+
+def update_according_to_source(source: str, vals: dict) -> dict :
+    res = re.match(regex_github_source, source)
+    if res:
+        vals.update(res.groupdict())
+    return vals

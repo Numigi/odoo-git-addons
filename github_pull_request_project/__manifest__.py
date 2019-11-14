@@ -14,7 +14,8 @@
     'data': [
         'views/ir_actions_act_window.xml',
         'views/ir_ui_menu.xml',
-        'views/ir_ui_view.xml',
+        'views/github_pull_request.xml',
+        'views/project_task.xml',
     ],
     'auto_install': True,
     'installable': True,

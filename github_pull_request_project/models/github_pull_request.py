@@ -14,8 +14,13 @@ class GithubPullRequestTask(models.Model):
     )
 
 
-def evaluate_pull_request_states(task):
-    return not task.pull_request_ids.filtered(lambda pr: pr.state == "open")
+def is_no_pull_request_open(task) -> bool:
+    """ Return True if the task has no PR or if all the related PRs are merged or closed."""
+    return (
+        task.pull_request_ids and not task.pull_request_ids.filtered(lambda pr: pr.state == "open")
+        or not task.pull_request_ids
+
+    )
 
 
 class ProjectTaskPullRequest(models.Model):
@@ -36,13 +41,13 @@ class ProjectTaskPullRequest(models.Model):
 
     def _check_all_pull_request_state(self):
         for record in self:
-            record.overall_pull_request_state = evaluate_pull_request_states(record)
+            record.no_pull_request_open = is_no_pull_request_open(record)
 
-    overall_pull_request_state = fields.Boolean(
+    no_pull_request_open = fields.Boolean(
         readonly=True, compute="_check_all_pull_request_state"
     )
 
     @api.onchange("pull_request_ids")
     def _all_pull_request_ready_on_change(self):
         for record in self:
-            record.all_pull_request_ready = evaluate_pull_request_states(record)
+            record.no_pull_request_open = is_no_pull_request_open(record)

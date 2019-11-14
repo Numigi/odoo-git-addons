@@ -5,6 +5,17 @@
 from odoo.tests import common
 from ddt import ddt, data, unpack
 
+test_data = (
+    ("https://github.com/Numigi/odoo_git_addons/pull/108693", "organization", "Numigi",),
+    ("https://github.com/OCA/odoo_git_addons/pull/108693", "organization", "OCA",),
+    ("https://www.github.com/Numigi/odoo_git_addons/pull/108693", "host", "www.github.com", ),
+    ("https://github.com/Numigi/odoo_git_addons/pull/108693", "host", "github.com",),
+    ("https://github.com/Numigi/odoo-git-addons/pull/108693", "repository", "odoo-git-addons",),
+    ("https://github.com/Numigi/odoo_git_addons/pull/108693", "repository", "odoo_git_addons",),
+    ("https://github.com/Numigi/odoo_git_addons/pull/1", "pull_request_number", 1,),
+    ("https://github.com/Numigi/odoo_git_addons/pull/108693", "pull_request_number", 108693,),
+)
+
 
 @ddt
 class TestPullRequest(common.SavepointCase):
@@ -15,61 +26,18 @@ class TestPullRequest(common.SavepointCase):
 
         cls.github_pull_request_pool = cls.env["github.pull_request"]
 
-    @data(
-        {
-            'url': "https://github.com/Numigi/odoo_git_addons/pull/108693",
-            'expected': {
-                'organization': 'Numigi',
-                'host': 'github.com',
-                'repository': 'odoo_git_addons',
-                'pull_request_number':108693,
-            }
-        },
-        {
-            'url': "https://github.com/Numigi/odoo-git-addons/pull/1",
-            'expected': {
-                'organization': 'Numigi',
-                'host': 'github.com',
-                'repository': 'odoo-git-addons',
-                'pull_request_number': 1,
-            }
-        },
-    )
+    @data(*test_data)
     @unpack
-    def test_whenPrIsCreatedFromURL_thenFieldsAreFilled(self, url, expected):
+    def test_whenPrIsCreatedFromURL_thenFieldsAreFilled(self, url, field, expected):
         pr = self.github_pull_request_pool.create({'source': url})
-        assert pr.organization == expected['organization']
-        assert pr.host == expected['host']
-        assert pr.repository == expected['repository']
-        assert pr.pull_request_number == expected['pull_request_number']
+        assert pr[field] == expected
 
-    @data(
-        {
-            'url': "https://github.com/Numigi/odoo_git_addons/pull/108693",
-            'expected': {
-                'organization': 'Numigi',
-                'host': 'github.com',
-                'repository': 'odoo_git_addons',
-                'pull_request_number':108693,
-            }
-        },
-        {
-            'url': "https://github.com/Numigi/odoo-git-addons/pull/1",
-            'expected': {
-                'organization': 'Numigi',
-                'host': 'github.com',
-                'repository': 'odoo-git-addons',
-                'pull_request_number': 1,
-            }
-        },
-    )
+    @data(*test_data)
     @unpack
-    def test_whenPrIsUpdatedFromURL_thenFieldsAreUpdated(self, url, expected):
+    def test_whenPrIsUpdatedFromURL_thenFieldsAreUpdated(self, url, field, expected):
         pr = self.github_pull_request_pool.create(
             {'source': "https://github.com/Numigi/odoo-public/pull/666"}
+            # fake url, does not matter
         )
         pr.source = url
-        assert pr.organization == expected['organization']
-        assert pr.host == expected['host']
-        assert pr.repository == expected['repository']
-        assert pr.pull_request_number == expected['pull_request_number']
+        assert pr[field] == expected
