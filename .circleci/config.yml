@@ -39,7 +39,7 @@ jobs:
       - run:
           name: Set tag
           command: |
-            ./nws circleci create-tag -t odoo-base
+            ./nws circleci create-tag -t isidor-odoo
 
 
 workflows:
