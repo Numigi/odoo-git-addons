@@ -1,4 +1,4 @@
-# © 2018 Numigi
+# © 2019 - today Numigi
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 {
@@ -11,30 +11,8 @@
     'category': 'Other',
     'summary': 'Install all addons required for testing.',
     'depends': [
-        'project_chatter',
-        'project_default_task_stage',
-        'project_form_with_dates',
-        'project_hide_create_sale_order',
-        'project_iteration',
-        'project_portal_hide_timesheets',
-        'project_portal_parent_task',
-        'project_remaining_hours_update',
-        'project_stage',
-        'project_stage_allow_timesheet',
-        'project_stage_no_quick_create',
-        'project_task_date_planned',
-        'project_task_deadline_from_project',
-        'project_task_full_text_search',
-        'project_task_id_in_display_name',
-        'project_task_resource_type',
-        'project_task_stage_external_mail',
-        'project_task_subtask_same_project',
-        'project_task_subtask_time_range',
-        'project_task_time_range',
-        'project_task_type',
-        'project_time_management',
-        'project_time_range',
-        'project_type',
+        'github_pull_request',
+        'github_pull_request_project',
     ],
     'installable': True,
 }
