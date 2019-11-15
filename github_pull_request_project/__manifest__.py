@@ -3,7 +3,7 @@
 
 {
     'name': 'Github Pull Request Project',
-    'version': '1.0.0',
+    'version': '1.1.0',
     'author': 'Numigi',
     'maintainer': 'Numigi',
     'website': 'https://bit.ly/numigi-com',
@@ -12,6 +12,7 @@
     'summary': 'Create a relation between tasks and github.pull_request models.',
     'depends': ['project', 'github_pull_request'],
     'data': [
+        'data/project_tags.xml',
         'views/ir_actions_act_window.xml',
         'views/ir_ui_menu.xml',
         'views/github_pull_request.xml',
