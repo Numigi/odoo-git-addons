@@ -98,8 +98,13 @@ class ProjectTaskPullRequest(models.Model):
                 not show_open_tag and
                 not show_merged_tag
             )
-            task.write({'tag_ids': [
+
+            task.update({'tag_ids': [
                 (4 if show_open_tag else 3, tag_open.id),
                 (4 if show_merged_tag else 3, tag_merged.id),
                 (4 if show_closed_tag else 3, tag_closed.id),
             ]})
+
+    @api.onchange('pull_request_ids')
+    def _onchange_pull_requests_update_tags(self):
+        self._update_pull_request_tags()
