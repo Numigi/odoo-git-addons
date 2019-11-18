@@ -11,12 +11,7 @@ GITHUB_TOKEN_HEADER = 'X-Hub-Signature'
 
 
 def _get_github_token_from_headers() -> str:
-    headers = request.httprequest.headers
-
-    if GITHUB_TOKEN_HEADER not in headers:
-        return None
-
-    return headers[GITHUB_TOKEN_HEADER]
+    return request.httprequest.headers.get(GITHUB_TOKEN_HEADER, "")
 
 
 def _check_github_event_token(token: str) -> bool:
