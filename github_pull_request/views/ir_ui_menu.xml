@@ -5,4 +5,8 @@
             id="menu_github_pull_requests"
             parent="menu_github"
             action="pull_requests_action_window"/>
+  <menuitem name="Events"
+            id="menu_github_event"
+            parent="menu_github"
+            action="events_action_window"/>
 </odoo>
