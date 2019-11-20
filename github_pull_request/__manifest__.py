@@ -13,6 +13,7 @@
     'depends': [],
     'data': [
         'security/ir.model.access.csv',
+        'views/github_event.xml',
         'views/github_pull_request.xml',
         'views/ir_actions_act_window.xml',
         'views/ir_ui_menu.xml',

@@ -1,8 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo>
+
   <record id="pull_requests_action_window" model="ir.actions.act_window">
     <field name="name">Pull Requests</field>
     <field name="res_model">github.pull_request</field>
+    <field name="target">current</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="view_mode">tree,form</field>
+    <field name="view_type">form</field>
+  </record>
+
+  <record id="events_action_window" model="ir.actions.act_window">
+    <field name="name">Events</field>
+    <field name="res_model">github.event</field>
     <field name="target">current</field>
     <field name="type">ir.actions.act_window</field>
     <field name="view_mode">tree,form</field>

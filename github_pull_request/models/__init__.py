@@ -2,5 +2,6 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from . import (
-    github_pull_request
+    github_event,
+    github_pull_request,
 )
