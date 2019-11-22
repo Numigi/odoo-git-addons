@@ -6,6 +6,9 @@ from odoo import http
 from odoo.http import request
 from werkzeug.wrappers import Response
 
+import logging
+_logger = logging.getLogger(__name__)
+
 GITHUB_EVENT_TOKEN_PARAM = 'github_pull_request.token'
 GITHUB_TOKEN_HEADER = 'X-Hub-Signature'
 
@@ -31,9 +34,11 @@ class GithubEvent(http.Controller):
         token = _get_github_token_from_headers()
 
         if not token:
+            _logger.info("A token is required to submit a new event.")
             return Response("A token is required to submit a new event.", status=401)
 
         if not _check_github_event_token(token):
+            _logger.info("The given token is not valid.")
             return Response("The given token is not valid.", status=401)
 
         request.env['github.event'].sudo().create({
