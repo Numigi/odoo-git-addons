@@ -39,7 +39,7 @@ class TestPullRequest(common.SavepointCase):
         return self.env['github.event'].search([])
 
     def test_after_called__event_created(self):
-        with mock_odoo_request(self.env, headers=self.headers, data=self.data, routing_type='json'):
+        with mock_odoo_request(self.env, headers=self.headers, data=self.data):
             response = self.controller.new_github_event(**self.data)
 
         assert response.status_code == 201
