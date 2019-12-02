@@ -2,42 +2,57 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import json
+import hmac
+import hashlib
 from odoo import http
-from odoo.http import request
-from werkzeug.wrappers import Response
+from odoo.http import request, Response
+from werkzeug.urls import url_encode
 
-GITHUB_EVENT_TOKEN_PARAM = 'github_pull_request.token'
-GITHUB_TOKEN_HEADER = 'X-Hub-Signature'
+import logging
+_logger = logging.getLogger(__name__)
 
-
-def _get_github_token_from_headers() -> str:
-    return request.httprequest.headers.get(GITHUB_TOKEN_HEADER, "")
-
-
-def _check_github_event_token(token: str) -> bool:
-    expected_token = request.env['ir.config_parameter'].sudo().get_param(GITHUB_EVENT_TOKEN_PARAM)
-    return expected_token == token
+GITHUB_EVENT_SECRET_PARAM = 'github_pull_request.github_secret'
+GITHUB_SIGNATURE_HEADER = 'X-Hub-Signature'
 
 
-def _get_github_event_payload() -> dict:
-    request_data = request.httprequest.data
-    return json.loads(request_data.decode())
+def make_github_signature(request_body: str, secret: str) -> str:
+    """Make a Github signature from the given request body and secret.
+
+    :param request_body: the request body
+    :param secret: the secret (token)
+    """
+    digest = hmac.new(secret.encode(), request_body.encode(), hashlib.sha1).hexdigest()
+    return 'sha1={}'.format(digest)
+
+
+def _get_github_signature_from_headers() -> str:
+    return request.httprequest.headers.get(GITHUB_SIGNATURE_HEADER, "")
+
+
+def _check_github_event_signature(signature: str) -> bool:
+    request_body = url_encode(request.httprequest.form)
+    secret = request.env['ir.config_parameter'].sudo().get_param(GITHUB_EVENT_SECRET_PARAM)
+    return make_github_signature(request_body, secret) == signature
 
 
 class GithubEvent(http.Controller):
 
-    @http.route('/web/github/event', type='json', auth='none', sitemap=False)
-    def new_github_event(self):
-        token = _get_github_token_from_headers()
+    @http.route('/web/github/event', type='http', auth='none', sitemap=False, csrf=False)
+    def new_github_event(self, **data):
+        signature = _get_github_signature_from_headers()
 
-        if not token:
-            return Response("A token is required to submit a new event.", status=401)
+        if not signature:
+            message = "The github signature is required to submit a new event."
+            _logger.info(message)
+            return Response(message, status=401)
 
-        if not _check_github_event_token(token):
-            return Response("The given token is not valid.", status=401)
+        if not _check_github_event_signature(signature):
+            message = "The given github signature is not valid."
+            _logger.info(message)
+            return Response(message, status=401)
 
         request.env['github.event'].sudo().create({
-            'payload': json.dumps(_get_github_event_payload()),
+            'payload': json.dumps(data),
         })
 
         return Response(status=201)
