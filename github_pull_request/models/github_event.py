@@ -8,7 +8,7 @@ from odoo.addons.base_sparse_field.models.fields import Serialized
 from odoo.addons.queue_job.job import job
 from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from .common import PULL_REQUEST_STATES, OPEN, CLOSED, MERGED
+from .common import PULL_REQUEST_STATES, MERGED
 
 
 class GithubEvent(models.Model):
