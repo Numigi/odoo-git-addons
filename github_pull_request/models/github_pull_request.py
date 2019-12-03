@@ -2,6 +2,8 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 import re
 from odoo import fields, models, api
+from .common import PULL_REQUEST_STATES, OPEN
+
 
 regex_github_source = re.compile(
     r'https:\/\/(?P<host>[\w\.]+)/'
@@ -15,17 +17,20 @@ regex_github_source = re.compile(
 class GithubPullRequest(models.Model):
     _name = "github.pull_request"
     _description = "Github Pull Request"
+    _rec_name = 'title'
 
+    title = fields.Char()
     source = fields.Char(required=True)
     state = fields.Selection(
-        [('open', 'Open'), ('merged', 'Merged'), ('closed', 'Closed')],
-        default='open',
+        PULL_REQUEST_STATES,
+        default=OPEN,
     )
     developer_id = fields.Many2one('res.partner', 'Developer', ondelete='restrict', index=True)
     host = fields.Char(readonly=True)
     organization = fields.Char(readonly=True)
     repository = fields.Char(readonly=True)
     pull_request_number = fields.Integer(readony=True)
+    latest_update = fields.Datetime()
 
     _sql_constraints = [
         ('source', 'UNIQUE (source)', 'A Pull Request already exists for this source'),
@@ -42,8 +47,34 @@ class GithubPullRequest(models.Model):
         super().write(updated_vals)
 
 
-def update_according_to_source(source: str, vals: dict) -> dict :
+def update_according_to_source(source: str, vals: dict) -> dict:
     res = re.match(regex_github_source, source)
     if res:
         vals.update(res.groupdict())
     return vals
+
+
+class GithubPullRequestWithEvents(models.Model):
+
+    _inherit = 'github.pull_request'
+
+    event_ids = fields.One2many(
+        'github.event', 'pull_request_id', 'Events',
+    )
+
+    def is_latest_event(self, event):
+        """Verify whether an event is the latest event recorded for this pull request.
+
+        :ptype event: github.event
+        :rtype: bool
+        """
+        return not self.latest_update or event.date_payload >= self.latest_update
+
+    def update_from_event(self, event):
+        """Update the pull request from the given event.
+
+        :ptype event: github.event
+        """
+        self.state = event.state
+        self.latest_update = event.date_payload
+        self.title = event.title

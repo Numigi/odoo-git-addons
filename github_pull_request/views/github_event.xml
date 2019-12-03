@@ -6,11 +6,22 @@
         <field name="model">github.event</field>
         <field name="arch" type="xml">
             <form string="Github Event">
+                <header>
+                    <button name="process" type="object" string="Process"/>
+                </header>
                 <sheet>
                     <group>
-                        <field name="create_date"/>
-                        <field name="payload"/>
+                        <field name="pull_request_id"/>
+                        <field name="title"/>
+                        <field name="action"/>
+                        <field name="state"/>
+                        <field name="date_payload"/>
                     </group>
+                    <notebook>
+                        <page name="payload" string="Payload">
+                            <field name="payload" nolabel="1" colspan="1"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -21,7 +32,9 @@
         <field name="model">github.event</field>
         <field name="arch" type="xml">
             <tree string="Github Events">
-                <field name="create_date"/>
+                <field name="pull_request_id"/>
+                <field name="action"/>
+                <field name="date_payload"/>
             </tree>
         </field>
     </record>

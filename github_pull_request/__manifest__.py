@@ -10,7 +10,10 @@
     'license': 'LGPL-3',
     'category': 'Connector',
     'summary': 'Define what is a github Pull Request as an odoo object.',
-    'depends': [],
+    'depends': [
+        'base_sparse_field',
+        'queue_job',
+    ],
     'data': [
         'security/ir.model.access.csv',
         'views/github_event.xml',

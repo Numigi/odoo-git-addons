@@ -51,8 +51,9 @@ class GithubEvent(http.Controller):
             _logger.info(message)
             return Response(message, status=401)
 
-        request.env['github.event'].sudo().create({
+        event = request.env['github.event'].sudo().create({
             'payload': json.dumps(data),
         })
+        event.with_delay().process()
 
         return Response(status=201)

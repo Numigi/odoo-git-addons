@@ -19,20 +19,32 @@
       <form delete="false">
         <sheet string="Github Pull Request">
           <h1>
-            <field name="source" modifiers="{'required': true}"/>
+            <field name="title"/>
           </h1>
           <group>
             <group>
-              <field name="host" modifiers="{'readonly': true}"/>
-              <field name="organization" modifiers="{'readonly': true}"/>
-              <field name="repository" modifiers="{'readonly': true}"/>
+              <field name="source" required="1"/>
+              <field name="host" readonly="1"/>
+              <field name="organization" readonly="1"/>
+              <field name="repository" readonly="1"/>
               <field name="pull_request_number" readonly="1"/>
             </group>
             <group>
               <field name="state"/>
-              <field name="developer_id" modifiers="{'required': true}"/>
+              <field name="developer_id"/>
+              <field name="latest_update" readonly="1"/>
             </group>
           </group>
+          <notebook>
+            <page name="events" string="Events">
+              <field name="event_ids" colspan="2" nolabel="1">
+                <tree>
+                  <field name="action"/>
+                  <field name="date_payload"/>
+                </tree>
+              </field>
+            </page>
+          </notebook>
         </sheet>
       </form>
     </field>
