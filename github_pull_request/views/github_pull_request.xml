@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <tree delete="false" string="Github Pull Request">
                 <field name="source"/>
+                <field name="title"/>
                 <field name="state"/>
             </tree>
         </field>
