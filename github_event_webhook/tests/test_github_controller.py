@@ -78,6 +78,6 @@ class TestPullRequest(common.SavepointCase):
         event = self._get_created_event()
         job = self.env['queue.job'].search([
             ('model_name', '=', 'github.event'),
-            ('method_name', '=', 'process'),
+            ('method_name', '=', 'process_job'),
         ]).filtered(lambda j: j.record_ids == [event.id])
         assert len(job) == 1

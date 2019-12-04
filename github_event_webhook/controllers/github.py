@@ -54,6 +54,6 @@ class GithubEvent(http.Controller):
         event = request.env['github.event'].sudo().create({
             'payload': json.dumps(data),
         })
-        event.with_delay().process()
+        event.with_delay().process_job()
 
         return Response(status=201)

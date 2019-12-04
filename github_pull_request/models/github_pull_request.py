@@ -1,5 +1,6 @@
 # © 2019 - today Numigi (tm) and all its contributors (https://bit.ly/numigiens)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+
 import re
 from odoo import fields, models, api
 from .common import PULL_REQUEST_STATES, OPEN
@@ -68,13 +69,13 @@ class GithubPullRequestWithEvents(models.Model):
         :ptype event: github.event
         :rtype: bool
         """
-        return not self.latest_update or event.date_payload >= self.latest_update
+        return not self.latest_update or event.pull_request_updated_at >= self.latest_update
 
     def update_from_event(self, event):
         """Update the pull request from the given event.
 
         :ptype event: github.event
         """
-        self.state = event.state
-        self.latest_update = event.date_payload
-        self.title = event.title
+        self.state = event.pull_request_state
+        self.latest_update = event.pull_request_updated_at
+        self.title = event.pull_request_title

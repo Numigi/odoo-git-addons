@@ -1,7 +1,7 @@
 Github Pull Request
 ===================
 
-This modules defines GitHub pull requests and events.
+This modules defines what is a GitHub pull requests (as an Odoo object).
 
 .. contents:: Table of Contents
 
@@ -19,44 +19,30 @@ I see the list of pull requests:
 
 Events
 ------
-As system administrator, I go to ``Configuration > Technical > GitHub > Events``.
+A pull request has a list of events.
 
- .. image:: static/description/menu_technical_events.png
+.. image:: static/description/pull_request_event_list.png
 
-I see the list of events:
+In the form view of an event, a ``Pull Request`` section is added.
 
- .. image:: static/description/event_tree.png
+.. image:: static/description/pull_request_event_form.png
 
- .. image:: static/description/event_form.png
+This section is filled using the payload when processing the event.
 
-Github Webhook
---------------
-The module contains an HTTP controller to register events in Odoo using github webhook.
+Pull Request Creation / Update
+------------------------------
+When an event is processed, a pull request is assigned to the event.
+If no existing pull request matches the event, a new pull request is created.
 
-Each event is processed asynchronously in a queue job.
+..
 
-Configuration
-~~~~~~~~~~~~~
-First, generate a secret that will be used to authentify the webhook with your Odoo instance.
-You may use the tool of your choice to create the secret.
+    Of course, if the event is not related to a pull requests (i.e. if it was generated from a github issue),
+    no pull request will be assigned to it.
 
-Then, create a system parameter:
+If it is the latest event for the pull request, the pull request record
+will be updated from the event data.
 
-* Key: ``github_pull_request.github_secret``
-* Value: Your secret
-
-.. image:: static/description/webhook_secret_parameter.png
-
-Then, in Github, setup the webhook.
-
-.. image:: static/description/github_webhook_example.png
-
-* Payload URL: ``{base_url}/web/github/event``
-* Content Type: ``application/x-www-form-urlencoded``
-* Secret: Your secret
-
-In the section ``Which events would you like to trigger this webhook?``,
-select ``Let me select individual events``, then check ``Pull requests``.
+Therefore, a pull request record in Odoo is updated as soon has new events are registered.
 
 Contributors
 ------------
