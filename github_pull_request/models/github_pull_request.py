@@ -31,7 +31,6 @@ class GithubPullRequest(models.Model):
     organization = fields.Char(readonly=True)
     repository = fields.Char(readonly=True)
     pull_request_number = fields.Integer(readony=True)
-    latest_update = fields.Datetime()
 
     _sql_constraints = [
         ('source', 'UNIQUE (source)', 'A Pull Request already exists for this source'),
@@ -59,6 +58,7 @@ class GithubPullRequestWithEvents(models.Model):
 
     _inherit = 'github.pull_request'
 
+    latest_update = fields.Datetime()
     event_ids = fields.One2many(
         'github.event', 'pull_request_id', 'Events',
     )
