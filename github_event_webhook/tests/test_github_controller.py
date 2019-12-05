@@ -70,3 +70,14 @@ class TestPullRequest(common.SavepointCase):
 
         assert response.status_code == 401
         assert not self._get_created_event()
+
+    def test_after_called__queue_job_created(self):
+        with mock_odoo_request(self.env, headers=self.headers, data=self.data):
+            self.controller.new_github_event(**self.data)
+
+        event = self._get_created_event()
+        job = self.env['queue.job'].search([
+            ('model_name', '=', 'github.event'),
+            ('method_name', '=', 'process_job'),
+        ]).filtered(lambda j: j.record_ids == [event.id])
+        assert len(job) == 1

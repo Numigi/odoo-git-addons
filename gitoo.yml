@@ -2,3 +2,8 @@
   branch: "12.0"
   includes:
     - test_http_request
+
+- url: https://github.com/OCA/queue
+  branch: "12.0"
+  includes:
+    - queue_job
