@@ -51,9 +51,18 @@ class GithubEvent(http.Controller):
             _logger.info(message)
             return Response(message, status=401)
 
-        event = request.env['github.event'].sudo().create({
-            'payload': json.dumps(data),
-        })
+        json_payload = self._get_json_payload(data)
+        event = self._create_event(json_payload)
         event.with_delay().process_job()
 
         return Response(status=201)
+
+    @staticmethod
+    def _get_json_payload(data):
+        return data['payload']
+
+    @staticmethod
+    def _create_event(json_payload):
+        return request.env['github.event'].sudo().create({
+            'payload': json_payload,
+        })

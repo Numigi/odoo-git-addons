@@ -27,10 +27,11 @@ class TestPullRequest(common.SavepointCase):
     def setUp(self):
         super().setUp()
         self.controller = GithubEvent()
-        self.data = OrderedDict([
+        self.payload = OrderedDict([
             ('number', 1),
             ('action', 'created'),
         ])
+        self.data = {'payload': json.dumps(self.payload)}
         encoded_data = url_encode(self.data)
         signature = make_github_signature(encoded_data, self.token)
         self.headers = {GITHUB_SIGNATURE_HEADER: signature}
@@ -51,7 +52,7 @@ class TestPullRequest(common.SavepointCase):
 
         event = self._get_created_event()
         assert event.payload
-        assert json.loads(event.payload) == self.data
+        assert json.loads(event.payload) == self.payload
 
     def test_if_token_not_passed__return_error_401(self):
         del self.headers[GITHUB_SIGNATURE_HEADER]
