@@ -52,7 +52,8 @@ class ProjectTaskPullRequest(models.Model):
         'pull_request_task_ref',
         'task_id',
         'pull_request_id',
-        string='Pull Requests'
+        string='Pull Requests',
+        copy=False,
     )
 
     def _compute_pull_request_qty(self):
