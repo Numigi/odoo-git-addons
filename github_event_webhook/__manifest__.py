@@ -14,5 +14,8 @@
         'github_event',
         'queue_job',
     ],
+    'data': [
+        'data/queue_job_function_data.xml',
+    ],
     'installable': True,
 }
