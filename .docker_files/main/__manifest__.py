@@ -11,10 +11,10 @@
     'category': 'Other',
     'summary': 'Install all addons required for testing.',
     'depends': [
-        # 'github_event',
-        # 'github_event_webhook',
-        # 'github_pull_request',
-        # 'github_pull_request_project',
+        'github_event',
+        'github_event_webhook',
+        'github_pull_request',
+        'github_pull_request_project',
     ],
     'installable': True,
 }
