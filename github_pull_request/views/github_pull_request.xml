@@ -6,7 +6,8 @@
         <field name="name">Default tree view for github.pull_request</field>
         <field name="arch" type="xml">
             <tree delete="false" string="Github Pull Request">
-                <field name="source"/>
+                <field name="source" widget="url"/>
+                <field name="version" />
                 <field name="title"/>
                 <field name="state"/>
             </tree>
@@ -24,7 +25,9 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="source" required="1"/>
+                            <field name="source" required="1" 
+                            widget="url"
+                            />
                             <field name="host" readonly="1"/>
                             <field name="organization" readonly="1"/>
                             <field name="repository" readonly="1"/>
@@ -32,6 +35,7 @@
                         </group>
                         <group>
                             <field name="state"/>
+                            <field name="version"/>
                             <field name="developer_id"/>
                             <field name="latest_update" readonly="1"/>
                         </group>

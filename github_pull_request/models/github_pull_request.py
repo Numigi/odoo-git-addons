@@ -22,11 +22,13 @@ class GithubPullRequest(models.Model):
 
     title = fields.Char()
     source = fields.Char(required=True)
+    version = fields.Char()
     state = fields.Selection(
         PULL_REQUEST_STATES,
         default=OPEN,
     )
-    developer_id = fields.Many2one('res.partner', 'Developer', ondelete='restrict', index=True)
+    developer_id = fields.Many2one(
+        'res.partner', 'Developer', ondelete='restrict', index=True)
     host = fields.Char(readonly=True)
     organization = fields.Char(readonly=True)
     repository = fields.Char(readonly=True)
@@ -79,3 +81,4 @@ class GithubPullRequestWithEvents(models.Model):
         self.state = event.pull_request_state
         self.latest_update = event.pull_request_updated_at
         self.title = event.pull_request_title
+        self.version = event.pull_request_version
