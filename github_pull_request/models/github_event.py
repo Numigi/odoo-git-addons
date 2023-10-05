@@ -20,6 +20,7 @@ class GithubEvent(models.Model):
     )
     pull_request_updated_at = fields.Datetime()
     pull_request_title = fields.Char()
+    pull_request_version = fields.Char()
     pull_request_state = fields.Selection(
         PULL_REQUEST_STATES,
     )
@@ -42,13 +43,18 @@ class GithubEvent(models.Model):
         return MERGED if is_merged else self._get_value_from_payload('pull_request.state')
 
     def _get_pull_request_updated_at(self):
-        datetime_string = self._get_value_from_payload('pull_request.updated_at')
+        datetime_string = self._get_value_from_payload(
+            'pull_request.updated_at')
         datetime_obj = dateutil.parser.parse(datetime_string)
-        naive_datetime_string = datetime_obj.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        naive_datetime_string = datetime_obj.strftime(
+            DEFAULT_SERVER_DATETIME_FORMAT)
         return naive_datetime_string
 
     def _get_pull_request_title(self):
         return self._get_value_from_payload("pull_request.title")
+
+    def _get_pull_request_version(self):
+        return self._get_value_from_payload("pull_request.base.ref")
 
     def _update_from_pull_request_fields(self):
         """Update the event's data related to pull requests from its payload."""
@@ -57,6 +63,7 @@ class GithubEvent(models.Model):
             'pull_request_state': self._get_pull_request_state(),
             'pull_request_updated_at': self._get_pull_request_updated_at(),
             'pull_request_title': self._get_pull_request_title(),
+            'pull_request_version': self._get_pull_request_version(),
         })
 
     def process(self):
