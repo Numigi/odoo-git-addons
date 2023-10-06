@@ -44,6 +44,27 @@ will be updated from the event data.
 
 Therefore, a pull request record in Odoo is updated as soon has new events are registered.
 
+Release
+-------
+Since the version 1.0.1 of this module here are the new features:
+
+* Addition of Branch information
+As a project user on Konvergo, I click on the task concerned, then on the Pull request tab. 
+I see now a new Branch field, which allows me to know which is the target branch of the pull request.
+
+.. image:: static/description/version_and_source_on_task.png
+
+By making a pull request, Konvergo automatically detects the branch from GitHub.
+
+* Clickable source link
+The source field value is now clickable to redirect to the pull request on github.
+
+.. image:: static/description/pull_request_open_form_from_tree.png
+
+In `Settings > Github > Pull Requests`, list view has now the column ``version``:
+
+.. image:: static/description/pull_request_tree_with_version.png
+
 Contributors
 ------------
 * Numigi (tm) and all its contributors (https://bit.ly/numigiens)
