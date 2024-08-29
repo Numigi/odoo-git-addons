@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="odoo_module_with_chatter" model="ir.ui.view">
+        <field name="name">Odoo Module: chatter</field>
+        <field name="model">odoo.module</field>
+        <field name="inherit_id" ref="github_connector_odoo.view_odoo_module_form"/>
+        <field name="arch" type="xml">
+            <sheet position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </sheet>
+        </field>
+    </record>
+</odoo>
