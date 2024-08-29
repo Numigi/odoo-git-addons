@@ -20,6 +20,7 @@ COPY ./github_event /mnt/extra-addons/github_event
 COPY ./github_event_webhook /mnt/extra-addons/github_event_webhook
 COPY ./github_pull_request /mnt/extra-addons/github_pull_request
 COPY ./github_pull_request_project /mnt/extra-addons/github_pull_request_project
+COPY ./numistore /mnt/extra-addons/numistore
 
 COPY .docker_files/main /mnt/extra-addons/main
 COPY .docker_files/odoo.conf /etc/odoo
