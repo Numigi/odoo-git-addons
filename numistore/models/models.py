@@ -1,6 +1,9 @@
 # © 2023 - today Numigi (tm) and all its contributors (https://bit.ly/numigiens)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+from datetime import datetime
+
+import pytz
 from odoo import models, fields, api
 
 organisation_default_series = (
@@ -36,3 +39,19 @@ class GithubOrganization(models.Model):
             for i, name in enumerate(organisation_default_series)
         ]
         series_obj.create(details)
+
+
+class AbstractGithubModel(models.AbstractModel):
+    _inherit = "abstract.github.model"
+
+    def process_timezone_fields(self, res):
+        """ 
+        This method replaces the original method from the abstract model 
+        from OCA Module github_connector.
+        """
+        for k, v in res.items():
+            if self._fields[k].type == "datetime":
+                if isinstance(v, str):
+                    res[k] = datetime.strptime(v, "%Y-%m-%dT%H:%M:%SZ")
+                elif isinstance(v, datetime) and v.tzinfo:
+                    res[k] = v.astimezone(pytz.utc).replace(tzinfo=None)
