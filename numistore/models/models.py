@@ -7,10 +7,9 @@ import pytz
 from odoo import models, fields, api
 
 organisation_default_series = (
-    '11.0',
     '12.0',
-    '13.0',
     '14.0',
+    '16.0',
 )
 
 
