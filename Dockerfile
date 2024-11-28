@@ -13,6 +13,7 @@ RUN gitoo install-all --conf_file /gitoo.yml --destination "${THIRD_PARTY_ADDONS
 
 USER odoo
 
+COPY github_event /mnt/extra-addons/github_event
 COPY github_pull_request /mnt/extra-addons/github_pull_request
 
 COPY .docker_files/main /mnt/extra-addons/main
