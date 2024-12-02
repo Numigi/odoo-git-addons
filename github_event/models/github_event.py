@@ -13,6 +13,7 @@ class GithubEvent(models.Model):
     _description = "Github Event"
     _order = 'id desc'
 
+    action = fields.Char()
     payload = fields.Text()
     payload_serialized = Serialized(compute='_compute_payload_serialized')
 
@@ -22,7 +23,7 @@ class GithubEvent(models.Model):
         for event in events_with_payloads:
             event.payload_serialized = json.loads(event.payload)
 
-    action = fields.Char()
+   
 
     def _get_value_from_payload(self, path):
         """Get a value from the payload.
