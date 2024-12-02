@@ -23,8 +23,6 @@ class GithubEvent(models.Model):
         for event in events_with_payloads:
             event.payload_serialized = json.loads(event.payload)
 
-   
-
     def _get_value_from_payload(self, path):
         """Get a value from the payload.
 
