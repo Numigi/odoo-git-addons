@@ -12,6 +12,7 @@
     'summary': 'Install all addons required for testing.',
     'depends': [
         'base',
+        'github_event',
     ],
     'installable': True,
 }
