@@ -15,6 +15,7 @@ USER odoo
 
 COPY github_event /mnt/extra-addons/github_event
 COPY github_pull_request /mnt/extra-addons/github_pull_request
+COPY github_pull_request_project /mnt/extra-addons/github_pull_request_project
 
 COPY .docker_files/main /mnt/extra-addons/main
 COPY .docker_files/odoo.conf /etc/odoo
