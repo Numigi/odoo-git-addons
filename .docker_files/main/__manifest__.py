@@ -13,7 +13,7 @@
     "depends": [
         "base",
         "github_event",
-        "github_pullrequest",
+        "github_pull_request",
     ],
     "installable": True,
 }
