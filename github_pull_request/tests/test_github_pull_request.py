@@ -51,7 +51,6 @@ test_data = (
 
 @ddt
 class TestPullRequest(common.SavepointCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -61,14 +60,14 @@ class TestPullRequest(common.SavepointCase):
     @data(*test_data)
     @unpack
     def test_whenPrIsCreatedFromURL_thenFieldsAreFilled(self, url, field, expected):
-        pr = self.github_pull_request_pool.create({'source': url})
+        pr = self.github_pull_request_pool.create({"source": url})
         assert pr[field] == expected
 
     @data(*test_data)
     @unpack
     def test_whenPrIsUpdatedFromURL_thenFieldsAreUpdated(self, url, field, expected):
         pr = self.github_pull_request_pool.create(
-            {'source': "https://github.com/Numigi/odoo-public/pull/666"}
+            {"source": "https://github.com/Numigi/odoo-public/pull/666"}
             # fake url, does not matter
         )
         pr.source = url
