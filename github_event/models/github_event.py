@@ -11,13 +11,13 @@ class GithubEvent(models.Model):
 
     _name = "github.event"
     _description = "Github Event"
-    _order = 'id desc'
+    _order = "id desc"
 
     action = fields.Char()
     payload = fields.Text()
-    payload_serialized = Serialized(compute='_compute_payload_serialized')
+    payload_serialized = Serialized(compute="_compute_payload_serialized")
 
-    @api.depends('payload')
+    @api.depends("payload")
     def _compute_payload_serialized(self):
         events_with_payloads = self.filtered(lambda e: e.payload)
         for event in events_with_payloads:
@@ -30,7 +30,7 @@ class GithubEvent(models.Model):
         :return: the value contained at the given path.
         """
         section = self.payload_serialized
-        keys = path.split('.')
+        keys = path.split(".")
 
         for key in keys[:-1]:
             if not isinstance(section, dict) or key not in section:
@@ -50,4 +50,4 @@ class GithubEvent(models.Model):
         This method is intended to be inherited by other modules
         to add extra behavior when processing a github event.
         """
-        self.action = self._get_value_from_payload('action')
+        self.action = self._get_value_from_payload("action")

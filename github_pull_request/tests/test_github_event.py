@@ -7,27 +7,26 @@ from ddt import ddt, data, unpack
 
 @ddt
 class TestGithubEvent(GithubEventCase):
-
     def test_if_not_pull_request_event__no_pull_request_created(self):
-        self.event_1.payload = self._read_payload('check_run_completed.json')
+        self.event_1.payload = self._read_payload("check_run_completed.json")
         self.event_1.process()
         assert not self.event_1.pull_request_id
 
     def test_if_not_existing_pull_request__new_pull_request_created(self):
-        self.event_1.payload = self._read_payload('pull_request_2_reopened.json')
+        self.event_1.payload = self._read_payload("pull_request_2_reopened.json")
         self.event_1.process()
         assert self.event_1.pull_request_id
 
     def test_if_existing_pull_request__event_attached_to_same_pull_request(self):
-        self.event_1.payload = self._read_payload('pull_request_2_closed.json')
-        self.event_2.payload = self._read_payload('pull_request_2_reopened.json')
+        self.event_1.payload = self._read_payload("pull_request_2_closed.json")
+        self.event_2.payload = self._read_payload("pull_request_2_reopened.json")
         self.event_1.process()
         self.event_2.process()
         assert self.event_1.pull_request_id
         assert self.event_1.pull_request_id == self.event_2.pull_request_id
 
     def test_event_can_be_processed_twice(self):
-        self.event_1.payload = self._read_payload('pull_request_2_closed.json')
+        self.event_1.payload = self._read_payload("pull_request_2_closed.json")
         self.event_1.process()
 
         initial_pull_request = self.event_1.pull_request_id
@@ -36,9 +35,9 @@ class TestGithubEvent(GithubEventCase):
         assert self.event_1.pull_request_id == initial_pull_request
 
     @data(
-        ('pull_request_1_merged.json', 'merged'),
-        ('pull_request_2_closed.json', 'closed'),
-        ('pull_request_2_reopened.json', 'open'),
+        ("pull_request_1_merged.json", "merged"),
+        ("pull_request_2_closed.json", "closed"),
+        ("pull_request_2_reopened.json", "open"),
     )
     @unpack
     def test_status(self, filename, expected_state):
@@ -47,8 +46,8 @@ class TestGithubEvent(GithubEventCase):
         assert self.event_1.pull_request_id.state == expected_state
 
     @data(
-        ('pull_request_2_closed.json', 'pull_request_2_reopened.json'),
-        ('pull_request_2_reopened.json', 'pull_request_2_closed.json'),
+        ("pull_request_2_closed.json", "pull_request_2_reopened.json"),
+        ("pull_request_2_reopened.json", "pull_request_2_closed.json"),
     )
     @unpack
     def test_if_not_last_event__pull_request_not_updated(
@@ -69,11 +68,11 @@ class TestGithubEvent(GithubEventCase):
         self.event_1.process()
         self.event_2.process()
         assert self.event_1.pull_request_id == self.event_2.pull_request_id
-        assert self.event_1.pull_request_id.state == 'open'
+        assert self.event_1.pull_request_id.state == "open"
 
     @data(
-        ('pull_request_1_merged.json', 'Add module account_show_full_features'),
-        ('pull_request_2_closed.json', 'Add better logging'),
+        ("pull_request_1_merged.json", "Add module account_show_full_features"),
+        ("pull_request_2_closed.json", "Add better logging"),
     )
     @unpack
     def test_title(self, filename, expected_title):
