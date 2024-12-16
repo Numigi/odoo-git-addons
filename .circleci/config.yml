@@ -42,9 +42,9 @@ jobs:
             curl -L $NWS_BIN_LOCATION > ./nws
             chmod +x ./nws
       - run:
-          name: Set tag
+          name: Set tag on isidor-odoo
           command: |
-            ./nws circleci create-tag -t odoo-base
+            ./nws circleci create-tag -t isidor-odoo
 
 workflows:
   version: 2
