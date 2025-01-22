@@ -6,7 +6,6 @@ from odoo.tests import common
 
 
 class TestProjectTask(common.SavepointCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
