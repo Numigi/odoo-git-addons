@@ -9,12 +9,12 @@ from .common import PULL_REQUEST_STATES, MERGED
 
 class GithubEvent(models.Model):
 
-    _inherit = 'github.event'
+    _inherit = "github.event"
 
     pull_request_id = fields.Many2one(
-        'github.pull_request',
-        'Pull Request',
-        ondelete='restrict',
+        "github.pull_request",
+        "Pull Request",
+        ondelete="restrict",
         index=True,
         copy=False,
     )
@@ -25,28 +25,28 @@ class GithubEvent(models.Model):
     )
 
     def _find_existing_pull_request(self, url):
-        return self.env['github.pull_request'].search(
+        return self.env["github.pull_request"].search(
             [
-                ('source', '=', url),
+                ("source", "=", url),
             ]
         )
 
     def _make_pull_request(self, url):
-        return self.env['github.pull_request'].create({'source': url})
+        return self.env["github.pull_request"].create({"source": url})
 
     def _get_pull_request(self):
-        url = self._get_value_from_payload('pull_request.html_url')
+        url = self._get_value_from_payload("pull_request.html_url")
         existing_pull_request = self._find_existing_pull_request(url)
         return existing_pull_request or self._make_pull_request(url)
 
     def _get_pull_request_state(self):
-        is_merged = self._get_value_from_payload('pull_request.merged_at')
+        is_merged = self._get_value_from_payload("pull_request.merged_at")
         return (
-            MERGED if is_merged else self._get_value_from_payload('pull_request.state')
+            MERGED if is_merged else self._get_value_from_payload("pull_request.state")
         )
 
     def _get_pull_request_updated_at(self):
-        datetime_string = self._get_value_from_payload('pull_request.updated_at')
+        datetime_string = self._get_value_from_payload("pull_request.updated_at")
         datetime_obj = dateutil.parser.parse(datetime_string)
         naive_datetime_string = datetime_obj.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return naive_datetime_string
@@ -58,17 +58,17 @@ class GithubEvent(models.Model):
         """Update the event's data related to pull requests from its payload."""
         self.write(
             {
-                'pull_request_id': self._get_pull_request().id,
-                'pull_request_state': self._get_pull_request_state(),
-                'pull_request_updated_at': self._get_pull_request_updated_at(),
-                'pull_request_title': self._get_pull_request_title(),
+                "pull_request_id": self._get_pull_request().id,
+                "pull_request_state": self._get_pull_request_state(),
+                "pull_request_updated_at": self._get_pull_request_updated_at(),
+                "pull_request_title": self._get_pull_request_title(),
             }
         )
 
     def process(self):
         super().process()
 
-        is_pull_request_event = 'pull_request' in self.payload_serialized
+        is_pull_request_event = "pull_request" in self.payload_serialized
         if is_pull_request_event:
             self._update_from_pull_request_fields()
 

@@ -7,12 +7,11 @@ from .common import GithubEventCase
 
 @ddt
 class TestGithubEvent(GithubEventCase):
-
     @data(
-        ('pull_request_1_merged.json', 'closed'),
-        ('pull_request_2_closed.json', 'closed'),
-        ('pull_request_2_reopened.json', 'reopened'),
-        ('check_run_completed.json', 'completed'),
+        ("pull_request_1_merged.json", "closed"),
+        ("pull_request_2_closed.json", "closed"),
+        ("pull_request_2_reopened.json", "reopened"),
+        ("check_run_completed.json", "completed"),
     )
     @unpack
     def test_action(self, filename, expected_action):
