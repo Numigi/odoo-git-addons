@@ -7,18 +7,18 @@ from .common import PULL_REQUEST_STATES, OPEN
 
 
 regex_github_source = re.compile(
-    r'https:\/\/(?P<host>[\w\.]+)/'
-    r'(?P<organization>\w+)/'
-    r'(?P<repository>[\w\-_]+)/'
-    r'pull/'
-    r'(?P<pull_request_number>\d+)'
+    r"https:\/\/(?P<host>[\w\.]+)/"
+    r"(?P<organization>\w+)/"
+    r"(?P<repository>[\w\-_]+)/"
+    r"pull/"
+    r"(?P<pull_request_number>\d+)"
 )
 
 
 class GithubPullRequest(models.Model):
     _name = "github.pull_request"
     _description = "Github Pull Request"
-    _rec_name = 'title'
+    _rec_name = "title"
 
     title = fields.Char()
     source = fields.Char(required=True)
@@ -27,7 +27,7 @@ class GithubPullRequest(models.Model):
         default=OPEN,
     )
     developer_id = fields.Many2one(
-        'res.partner', 'Developer', ondelete='restrict', index=True
+        "res.partner", "Developer", ondelete="restrict", index=True
     )
     host = fields.Char(readonly=True)
     organization = fields.Char(readonly=True)
@@ -35,16 +35,16 @@ class GithubPullRequest(models.Model):
     pull_request_number = fields.Integer(readony=True)
 
     _sql_constraints = [
-        ('source', 'UNIQUE (source)', 'A Pull Request already exists for this source'),
+        ("source", "UNIQUE (source)", "A Pull Request already exists for this source"),
     ]
 
     @api.model
     def create(self, vals):
-        updated_vals = update_according_to_source(vals['source'], vals)
+        updated_vals = update_according_to_source(vals["source"], vals)
         return super().create(updated_vals)
 
     def write(self, vals):
-        updated_vals = update_according_to_source(vals.get('source', ''), vals)
+        updated_vals = update_according_to_source(vals.get("source", ""), vals)
         super().write(updated_vals)
 
 
@@ -57,13 +57,13 @@ def update_according_to_source(source: str, vals: dict) -> dict:
 
 class GithubPullRequestWithEvents(models.Model):
 
-    _inherit = 'github.pull_request'
+    _inherit = "github.pull_request"
 
     latest_update = fields.Datetime()
     event_ids = fields.One2many(
-        'github.event',
-        'pull_request_id',
-        'Events',
+        "github.event",
+        "pull_request_id",
+        "Events",
     )
 
     def is_latest_event(self, event):
