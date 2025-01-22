@@ -29,12 +29,12 @@ class TestProjectTask(common.SavepointCase):
             }
         )
 
-        cls.tag_open = cls.env.ref('github_pull_request_project.tag_pull_request_open')
+        cls.tag_open = cls.env.ref("github_pull_request_project.tag_pull_request_open")
         cls.tag_merged = cls.env.ref(
-            'github_pull_request_project.tag_pull_request_merged'
+            "github_pull_request_project.tag_pull_request_merged"
         )
         cls.tag_closed = cls.env.ref(
-            'github_pull_request_project.tag_pull_request_closed'
+            "github_pull_request_project.tag_pull_request_closed"
         )
 
     # Simple cases
@@ -145,7 +145,7 @@ class TestProjectTask(common.SavepointCase):
             }
         )
         assert task.tag_ids == self.tag_open
-        self.pull_request_open.state = 'merged'
+        self.pull_request_open.state = "merged"
         assert task.tag_ids == self.tag_merged
 
     def test_onPullRequestTaskIdsChange_tagsUpdated(self):
