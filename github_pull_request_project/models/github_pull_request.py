@@ -37,7 +37,7 @@ class GithubPullRequestTask(models.Model):
         return True
 
 
-def has_pull_request_at_state(task: "project.task", state: str) -> bool:
+def has_pull_request_at_state(task: "project.task", state: str) -> bool:  # noqa F821
     """Return True if the task has at least one PR at the given state."""
     return task.pull_request_ids.filtered(lambda pr: pr.state == state)
 
