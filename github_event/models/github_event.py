@@ -3,25 +3,30 @@
 
 import json
 from odoo import api, fields, models, _
-from odoo.addons.base_sparse_field.models.fields import Serialized
 from odoo.exceptions import ValidationError
 
 
 class GithubEvent(models.Model):
-
     _name = "github.event"
     _description = "Github Event"
     _order = "id desc"
 
     action = fields.Char()
     payload = fields.Text()
-    payload_serialized = Serialized(compute="_compute_payload_serialized")
+
+    # Odoo 18: Utilisation du champ Json natif à la place de Serialized
+    payload_serialized = fields.Json(compute="_compute_payload_serialized")
 
     @api.depends("payload")
     def _compute_payload_serialized(self):
-        events_with_payloads = self.filtered(lambda e: e.payload)
-        for event in events_with_payloads:
-            event.payload_serialized = json.loads(event.payload)
+        for event in self:
+            if event.payload:
+                try:
+                    event.payload_serialized = json.loads(event.payload)
+                except json.JSONDecodeError:
+                    event.payload_serialized = {}
+            else:
+                event.payload_serialized = {}
 
     def _get_value_from_payload(self, path):
         """Get a value from the payload.
@@ -29,7 +34,7 @@ class GithubEvent(models.Model):
         :param path: a doted notation of the path to access the value.
         :return: the value contained at the given path.
         """
-        section = self.payload_serialized
+        section = self.payload_serialized or {}
         keys = path.split(".")
 
         for key in keys[:-1]:
@@ -41,6 +46,11 @@ class GithubEvent(models.Model):
                 )
 
             section = section[key]
+
+        if not isinstance(section, dict) or keys[-1] not in section:
+            raise ValidationError(
+                _("The payload does not contain a value at the path {}.").format(path)
+            )
 
         return section[keys[-1]]
 

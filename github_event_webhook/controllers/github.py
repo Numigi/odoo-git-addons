@@ -3,11 +3,11 @@
 
 import hmac
 import hashlib
-from odoo import http, SUPERUSER_ID
-from odoo.http import request, Response
-from werkzeug.urls import url_encode
-
 import logging
+from urllib.parse import urlencode  # <-- Odoo 18 : On utilise la librairie standard
+
+from odoo import http
+from odoo.http import request, Response
 
 _logger = logging.getLogger(__name__)
 
@@ -16,11 +16,7 @@ GITHUB_SIGNATURE_HEADER = "X-Hub-Signature"
 
 
 def make_github_signature(request_body: str, secret: str) -> str:
-    """Make a Github signature from the given request body and secret.
-
-    :param request_body: the request body
-    :param secret: the secret (token)
-    """
+    """Make a Github signature from the given request body and secret."""
     digest = hmac.new(secret.encode(), request_body.encode(), hashlib.sha1).hexdigest()
     return "sha1={}".format(digest)
 
@@ -30,10 +26,11 @@ def _get_github_signature_from_headers() -> str:
 
 
 def _check_github_event_signature(signature: str) -> bool:
-    request_body = url_encode(request.httprequest.form)
+    request_body = urlencode(request.httprequest.form)
+    # Odoo 18 : Remplacement de with_user(SUPERUSER_ID) par sudo()
     secret = (
         request.env["ir.config_parameter"]
-        .with_user(SUPERUSER_ID)
+        .sudo()
         .get_param(GITHUB_EVENT_SECRET_PARAM)
     )
     return make_github_signature(request_body, secret) == signature
@@ -58,6 +55,8 @@ class GithubEvent(http.Controller):
 
         json_payload = self._get_json_payload(data)
         event = self._create_event(json_payload)
+
+        # S'assure que queue_job est bien installé en V18 pour utiliser with_delay()
         event.with_delay().process_job()
 
         return Response(status=201)

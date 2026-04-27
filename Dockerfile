@@ -1,4 +1,4 @@
-FROM quay.io/numigi/odoo-public:16.latest
+FROM quay.io/numigi/odoo-public:18.latest
 LABEL maintainer="contact@numigi.com"
 
 USER root
@@ -14,7 +14,7 @@ RUN gitoo install-all --conf_file /gitoo.yml --destination "${THIRD_PARTY_ADDONS
 USER odoo
 
 COPY github_event /mnt/extra-addons/github_event
-COPY github_event_webhook /mnt/extra-addons/github_event_webhook 
+COPY github_event_webhook /mnt/extra-addons/github_event_webhook
 COPY github_pull_request /mnt/extra-addons/github_pull_request
 COPY github_pull_request_project /mnt/extra-addons/github_pull_request_project
 

@@ -32,20 +32,24 @@ class GithubPullRequest(models.Model):
     host = fields.Char(readonly=True)
     organization = fields.Char(readonly=True)
     repository = fields.Char(readonly=True)
-    pull_request_number = fields.Integer(readony=True)
+    # Correction de la coquille 'readony' -> 'readonly'
+    pull_request_number = fields.Integer(readonly=True)
 
     _sql_constraints = [
         ("source", "UNIQUE (source)", "A Pull Request already exists for this source"),
     ]
 
-    @api.model
-    def create(self, vals):
-        updated_vals = update_according_to_source(vals["source"], vals)
-        return super().create(updated_vals)
+    # Odoo 18 : Utilisation de model_create_multi
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if "source" in vals:
+                update_according_to_source(vals["source"], vals)
+        return super().create(vals_list)
 
     def write(self, vals):
         updated_vals = update_according_to_source(vals.get("source", ""), vals)
-        super().write(updated_vals)
+        return super().write(updated_vals)
 
 
 def update_according_to_source(source: str, vals: dict) -> dict:

@@ -1,12 +1,14 @@
 # Copyright 2023 - today Numigi (tm) and all its contributors (https://bit.ly/numigiens)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+import json
 from collections import OrderedDict
+from uuid import uuid4
+from urllib.parse import urlencode  # <-- Odoo 18 : On utilise la librairie standard
+
 from odoo.addons.test_http_request.common import mock_odoo_request
 from odoo.tests.common import TransactionCase
-from uuid import uuid4
-from werkzeug.urls import url_encode
-import json
+
 from ..controllers.github import (
     GithubEvent,
     GITHUB_EVENT_SECRET_PARAM,
@@ -33,7 +35,7 @@ class TestPullRequest(TransactionCase):
             ]
         )
         self.data = {"payload": json.dumps(self.payload)}
-        encoded_data = url_encode(self.data)
+        encoded_data = urlencode(self.data)
         signature = make_github_signature(encoded_data, self.token)
         self.headers = {GITHUB_SIGNATURE_HEADER: signature}
 
@@ -86,6 +88,6 @@ class TestPullRequest(TransactionCase):
                     ("method_name", "=", "process_job"),
                 ]
             )
-            .filtered(lambda j: j.record_ids == [event.id])
+            .filtered(lambda j: event in j.records)
         )
         assert len(job) == 1

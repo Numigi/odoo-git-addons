@@ -1,7 +1,5 @@
 # Copyright 2023 - today Numigi (tm) and all its contributors (https://bit.ly/numigiens)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from . import (
-    github_event,
-    github_pull_request,
-)
+from . import github_event
+from . import github_pull_request

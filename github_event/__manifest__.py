@@ -3,7 +3,7 @@
 
 {
     "name": "Github Events",
-    "version": "16.0.1.0.0",
+    "version": "18.0.1.0.0",
     "author": "Numigi",
     "maintainer": "Numigi",
     "website": "https://bit.ly/numigi-com",
@@ -11,7 +11,7 @@
     "category": "Connector",
     "summary": "Define what is a github event as an odoo object",
     "depends": [
-        "base_sparse_field",
+        "base",
     ],
     "data": [
         "security/ir.model.access.csv",

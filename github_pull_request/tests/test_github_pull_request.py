@@ -50,7 +50,7 @@ test_data = (
 
 
 @ddt
-class TestPullRequest(common.SavepointCase):
+class TestPullRequest(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

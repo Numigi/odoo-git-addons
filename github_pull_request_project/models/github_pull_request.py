@@ -5,7 +5,6 @@ from odoo import fields, models, api
 
 
 class GithubPullRequestTask(models.Model):
-
     _inherit = "github.pull_request"
 
     task_ids = fields.Many2many(
@@ -16,11 +15,11 @@ class GithubPullRequestTask(models.Model):
         string="Tasks",
     )
 
-    @api.model
-    def create(self, vals):
-        pr = super().create(vals)
-        pr.task_ids._update_pull_request_tags()
-        return pr
+    @api.model_create_multi
+    def create(self, vals_list):
+        prs = super().create(vals_list)
+        prs.mapped("task_ids")._update_pull_request_tags()
+        return prs
 
     def write(self, vals):
         must_update_tags_on_tasks = "task_ids" in vals or "state" in vals
@@ -28,22 +27,21 @@ class GithubPullRequestTask(models.Model):
         if must_update_tags_on_tasks:
             tasks_to_update = self.mapped("task_ids")
 
-        super().write(vals)
+        res = super().write(vals)
 
         if must_update_tags_on_tasks:
             tasks_to_update |= self.mapped("task_ids")
             tasks_to_update._update_pull_request_tags()
 
-        return True
+        return res
 
 
-def has_pull_request_at_state(task: "project.task", state: str) -> bool:  # noqa F821
+def has_pull_request_at_state(task: "project.task", state: str) -> bool:
     """Return True if the task has at least one PR at the given state."""
-    return task.pull_request_ids.filtered(lambda pr: pr.state == state)
+    return bool(task.pull_request_ids.filtered(lambda pr: pr.state == state))
 
 
 class ProjectTaskPullRequest(models.Model):
-
     _inherit = "project.task"
 
     pull_request_ids = fields.Many2many(
@@ -55,25 +53,23 @@ class ProjectTaskPullRequest(models.Model):
         copy=False,
     )
 
+    pull_request_qty = fields.Integer(compute="_compute_pull_request_qty")
+
     def _compute_pull_request_qty(self):
         for record in self:
             record.pull_request_qty = len(record.pull_request_ids)
 
-    pull_request_qty = fields.Integer(compute="_compute_pull_request_qty")
-
-    @api.model
-    def create(self, vals):
-        task = super().create(vals)
-        task._update_pull_request_tags()
-        return task
+    @api.model_create_multi
+    def create(self, vals_list):
+        tasks = super().create(vals_list)
+        tasks._update_pull_request_tags()
+        return tasks
 
     def write(self, vals):
-        super().write(vals)
-
+        res = super().write(vals)
         if "pull_request_ids" in vals:
             self._update_pull_request_tags()
-
-        return True
+        return res
 
     def _update_pull_request_tags(self):
         tag_open = self.env.ref("github_pull_request_project.tag_pull_request_open")
@@ -91,7 +87,8 @@ class ProjectTaskPullRequest(models.Model):
                 and not show_merged_tag
             )
 
-            task.update(
+            # Dans Odoo 18, write est préféré à update pour les champs relationnels
+            task.write(
                 {
                     "tag_ids": [
                         (4 if show_open_tag else 3, tag_open.id),

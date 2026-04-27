@@ -5,7 +5,8 @@ import os
 from odoo.tests import common
 
 
-class GithubEventCase(common.SavepointCase):
+# Odoo 18 : Remplacement de SavepointCase par TransactionCase
+class GithubEventCase(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
