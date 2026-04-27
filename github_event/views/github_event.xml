@@ -28,10 +28,10 @@
         <field name="name">Github Event List</field>
         <field name="model">github.event</field>
         <field name="arch" type="xml">
-            <tree string="Github Events">
+            <list string="Github Events">
                 <field name="action" />
                 <field name="create_date" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -40,7 +40,6 @@
         <field name="res_model">github.event</field>
         <field name="target">current</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_mode">tree,form</field>
-    </record>
+        <field name="view_mode">list,form</field> </record>
 
 </odoo>
