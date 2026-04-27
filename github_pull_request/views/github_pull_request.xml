@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo>
 
-    <record id="github_pull_request_tree" model="ir.ui.view">
+    <record id="github_pull_request_list" model="ir.ui.view">
         <field name="model">github.pull_request</field>
-        <field name="name">Default tree view for github.pull_request</field>
+        <field name="name">Default list view for github.pull_request</field>
         <field name="arch" type="xml">
-            <tree delete="false" string="Github Pull Request">
+            <list delete="false" string="Github Pull Request">
                 <field name="source" />
                 <field name="title" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -39,10 +39,10 @@
                     <notebook>
                         <page name="events" string="Events">
                             <field colspan="2" name="event_ids" nolabel="1">
-                                <tree>
+                                <list>
                                     <field name="pull_request_state" string="State" />
                                     <field name="pull_request_updated_at" string="Updated At" />
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -76,7 +76,7 @@
         <field name="res_model">github.pull_request</field>
         <field name="target">current</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 </odoo>
