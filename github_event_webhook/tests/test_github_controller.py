@@ -88,6 +88,6 @@ class TestPullRequest(TransactionCase):
                     ("method_name", "=", "process_job"),
                 ]
             )
-            .filtered(lambda j: j.records == [event.id])
+            .filtered(lambda j: event in j.records)
         )
         assert len(job) == 1
