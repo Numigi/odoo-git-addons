@@ -13,7 +13,7 @@
     "depends": [
         "github_event",
         #"github_event_webhook",
-        #"github_pull_request",
+        "github_pull_request",
         #"github_pull_request_project",
     ],
     "installable": True,
