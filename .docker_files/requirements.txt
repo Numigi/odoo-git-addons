@@ -1,7 +1,7 @@
 ddt==1.2.0
 
 # Required for OCA apps-store
-GitPython==3.1.43
+GitPython==3.1.54
 pathspec==0.12.1
 PyGithub==2.3.0
 pygount==1.8.0
